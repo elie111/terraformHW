@@ -6,17 +6,14 @@
 </p>
 
 ### In this homework we worked with Terraform and AWS, we were asked to create:
->> 2 Load Balancers - Internet Facing and Internal - Create and use a Terraform module <br />
->> 4 Web Servers - Create and use a Terraform module  <br />
->> 4 Application Servers - Create and use a Terraform module  <br />
->> 1 RDS with two nodes (MySQL)  <br />
->> 1 S3 Bucket  <br />
+> 2 Load Balancers - Internet Facing and Internal - Create and use a Terraform module <br />
+> 4 Web Servers - Create and use a Terraform module  <br />
+> 4 Application Servers - Create and use a Terraform module  <br />
+> 1 RDS with two nodes (MySQL)  <br />
+> 1 S3 Bucket  <br />
 
 ### To run the project:
->> clone the project: git clone https://github.com/elie111/terraformHW.git <br />
->> terraform init <br />
->> terraform plan <br />
->> terraform apply <br />
-
-### results:
->> to open 
+> clone the project: git clone https://github.com/elie111/terraformHW.git <br />
+> terraform init <br />
+> terraform plan <br />
+> terraform apply <br />
