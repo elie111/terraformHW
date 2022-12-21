@@ -31,7 +31,7 @@ variable "Key_name" {
 
 variable "ami" {
   type = string
-  default = "ami-0ff8a91507f77f867"
+  default = "ami-0caef02b518350c8b"
 }
 
 variable "shell_script_name" {

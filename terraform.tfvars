@@ -1,5 +1,3 @@
-# The variables that your module will accept as input.
-
 region         = "<Your region>"  //eu-central-1 
 access_key     = "<Your access_key>"     
 secret_key     = "<Your secret_key>"     
