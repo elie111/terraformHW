@@ -33,7 +33,7 @@ resource "aws_lb" "internet_facing_lb" {
   }
 }
 
-resource "aws_lb_listener" "internet_facing_lb_listener" {
+resource "aws_lb_listener" "internet_facing_lb_listener1" {
   load_balancer_arn = aws_lb.internet_facing_lb.arn
   port              = "80"
   protocol          = "HTTP"
@@ -43,7 +43,7 @@ resource "aws_lb_listener" "internet_facing_lb_listener" {
   }
 }
 
-resource "aws_lb_listener" "internet_facing_lb_listener" {
+resource "aws_lb_listener" "internet_facing_lb_listener2" {
   load_balancer_arn = aws_lb.internet_facing_lb.arn
   port              = "443"
   protocol          = "HTTP"
@@ -53,7 +53,7 @@ resource "aws_lb_listener" "internet_facing_lb_listener" {
   }
 }
 
-resource "aws_lb_listener" "internet_facing_lb_listener" {
+resource "aws_lb_listener" "internet_facing_lb_listene3" {
   load_balancer_arn = aws_lb.internet_facing_lb.arn
   port              = "22"
   protocol          = "TCP"
