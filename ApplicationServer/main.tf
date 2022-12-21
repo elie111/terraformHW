@@ -1,10 +1,10 @@
-//vpc
+#vpc
 resource "aws_default_vpc" "default_vpc" {
   tags = {
     Name = "Default VPC"
   }
 }
-//subnet
+#subnet
 resource "aws_default_subnet" "default_subnet" {
   availability_zone = "${var.region}a"
 

@@ -1,3 +1,7 @@
-output "app_server_ips" {
-  value = aws_instance.app_server.*.public_ip
+output "app_server_id" {
+  value = "${aws_instance.ApplicationServer.*.id}"
+}
+
+output "app_server_name" {
+  value = "${aws_instance.app_server.*.tags.Name}"
 }

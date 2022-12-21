@@ -1,6 +1,13 @@
-variable "nameofinternet" {
+
+variable "region" {
   type = string
+  default = "eu-central-1"
 }
-variable "nameofiternal" {
-  type = string
+
+variable "access_key" {
+  description = "AWS Access Key"
+}
+
+variable "secret_key" {
+  description = "AWS Secret Key"
 }
