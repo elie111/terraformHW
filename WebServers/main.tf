@@ -1,60 +1,101 @@
-terraform {
-  required_version = ">= 0.12"
 
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-    }
+#VPC
+resource "aws_default_vpc" "default_vpc" {
+  tags = {
+    Name = "Default VPC"
   }
 }
 
-provider "aws"{
+resource "aws_default_subnet" "default_subnet" {
+  availability_zone = "${var.region}a"
+
+  tags = {
+    Name = "Default subnet for eu-central-1a"
+  }
+}
+
+resource "aws_lb_target_group" "web_server_tg_port_22" {
+  name                = "web-server-tg-port-22"
+  port                = 22
+  protocol            = "TCP"
+  target_type         = "instance"
+  vpc_id              = aws_vpc.default_vpc.id
+  health_check {
+    port                = 22
+    interval            = 30
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+  }
+}
+
+resource "aws_lb_target_group" "web_server_tg_port_80" {
+  name                = "web-server-tg-port-80"
+  port                = 80
+  protocol            = "HTTP"
+  target_type         = "instance"
+  vpc_id              = aws_vpc.default_vpc.id
+  health_check {
+    path                = "/health"
+    interval            = 30
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    matcher             = "200"
+  }
+}
+
+resource "aws_lb_target_group" "web_server_tg_port_443" {
+  name                = "web-server-tg-port-443"
+  port                = 443
+  protocol            = "HTTPS"
+  target_type         = "instance"
+  vpc_id              = aws_vpc.default_vpc.id
+  health_check {
+    path                = "/health"
+    interval            = 30
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    matcher             = "200"
+  }
+}
+
+resource "aws_lb_target_group_attachment" "aws_lb_tg_attachment_port_80" {
+  target_group_arn = aws_lb_target_group.web_server_tg_port_80.arn
+  target_id        = aws_instance.web_server.id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "aws_lb_tg_attachment_port_22" {
+  target_group_arn = aws_lb_target_group.web_server_tg_port_22.arn
+  target_id        = aws_instance.web_server.id
+  port             = 22
+}
+
+resource "aws_lb_target_group_attachment" "aws_lb_tg_attachment_port_443" {
+  target_group_arn = aws_lb_target_group.web_server_tg_port_443.arn
+  target_id        = aws_instance.web_server.id
+  port             = 443
+}
+
+
+resource "aws_network_interface_sg_attachment" "sg_attachment" {
+  security_group_id    = aws_security_group.default
+  network_interface_id = aws_instance.web_server.primary_network_interface_id
   
-    region     = var.Zone
 }
-
-
-resource "aws_security_group" "Hello-terra-ssh-http" {
-  name        = "secur-grp1"
-  description = "allowing ssh and http"
-
-  ingress {
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      =  ["0.0.0.0/0"]
-    
-  }
-    ingress {
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      =  ["0.0.0.0/0"]
-    
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-}
-
 
 resource "aws_instance" "web_server" {
-  count             = 4
-  ami               = var.AmiName
-  instance_type     = var.InstenceType
-  security_groups   = [aws_security_group.Hello-terra-ssh-http.id]
-  key_name = "fursa99"
-  user_data = <<-EOF
-                  #!/bin/bash
-                  sudo apt update -y
-                  sudo systemctl start httpd
-                  sudo systemctl enable httpd
-                  echo "<h1>Web Server using Terrafrom </h1> >>/var/www/html/index.html
-                  EOF
+  instance_type      = var.instance_type
+  availability_zone = "${var.region}a"
+  subnet_id          = aws_default_subnet.default_subnet.id
+  ami                = var.ami
+  key_name           = var.Key_name
+  associate_public_ip_address = true
+  user_data = file("${var.shell_script_name}.sh")
 
+  tags = {
+   Name = var.instance_name
+  }
 }
